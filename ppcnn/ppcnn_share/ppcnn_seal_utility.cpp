@@ -205,7 +205,7 @@ void read_from_binary_stream(std::iostream& stream, void* base_ptr_in_stream,
     auto* p = static_cast<uint8_t*>(base_ptr_in_stream) + stream.tellg();
     std::string s(p, p + read_sz);
 
-    auto context = seal::SEALContext::Create(enc_params);
+    seal::SEALContext context(enc_params);
     std::istringstream iss(s, std::istringstream::binary);
     auto loaded_sz = data.load(context, iss);
 

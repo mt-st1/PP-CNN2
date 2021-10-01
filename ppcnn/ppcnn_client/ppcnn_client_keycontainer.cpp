@@ -55,10 +55,10 @@ inline void print_parameters(std::shared_ptr<seal::SEALContext> context)
     std::string scheme_name;
     switch (context_data.parms().scheme())
     {
-        case seal::scheme_type::BFV:
+        case seal::scheme_type::bfv:
             scheme_name = "BFV";
             break;
-        case seal::scheme_type::CKKS:
+        case seal::scheme_type::ckks:
             scheme_name = "CKKS";
             break;
         default:
@@ -87,7 +87,7 @@ inline void print_parameters(std::shared_ptr<seal::SEALContext> context)
     /*
       For the BFV scheme print the plain_modulus parameter.
     */
-    if (context_data.parms().scheme() == seal::scheme_type::BFV)
+    if (context_data.parms().scheme() == seal::scheme_type::bfv)
     {
         std::cout << "|   plain_modulus: "
                   << context_data.parms().plain_modulus().value() << std::endl;
@@ -152,7 +152,7 @@ struct KeyContainer::Impl
 
         seal::EncryptionParameters params;
         get_param(key_id, params);
-        auto context = seal::SEALContext::Create(params);
+        seal::SEALContext context(params);
 
         std::ifstream ifs(filename);
         data.unsafe_load(context, ifs);
@@ -192,7 +192,7 @@ private:
                            const KeyFilenames& filenames)
     {
         STDSC_LOG_INFO("Generating keys");
-        seal::EncryptionParameters params(seal::scheme_type::CKKS);
+        seal::EncryptionParameters params(seal::scheme_type::ckks);
 
         const size_t poly_mod_degree =
           static_cast<size_t>(std::pow(2.0, power));
@@ -207,13 +207,15 @@ private:
         params.set_coeff_modulus(
           seal::CoeffModulus::Create(poly_mod_degree, bit_sizes));
 
-        auto context = seal::SEALContext::Create(params);
+        std::shared_ptr<seal::SEALContext> context(new seal::SEALContext(params));
         print_parameters(context);
 
-        seal::KeyGenerator keygen(context);
-        seal::PublicKey public_key = keygen.public_key();
+        seal::KeyGenerator keygen(*context);
         seal::SecretKey secret_key = keygen.secret_key();
-        seal::RelinKeys relin_keys = keygen.relin_keys();
+        seal::PublicKey public_key;
+        keygen.create_public_key(public_key);
+        seal::RelinKeys relin_keys;
+        keygen.create_relin_keys(relin_keys);
 
         std::cout << "Save public key and secret key..." << std::flush;
         std::ofstream pkFile(filenames.filename(KeyKind_t::kKindPubKey),

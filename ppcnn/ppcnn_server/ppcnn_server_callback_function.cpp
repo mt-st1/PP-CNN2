@@ -63,12 +63,12 @@ DEFUN_DATA(CallbackFunctionEncryptionKeys)
     const auto param = rplaindata.data();
     STDSC_LOG_INFO("Encryption key upload params: key_id: %d", param.key_id);
 
-    seal::EncryptionParameters enc_params(seal::scheme_type::CKKS);
+    seal::EncryptionParameters enc_params(seal::scheme_type::ckks);
     ppcnn_share::seal_utility::read_from_binary_stream(
       rstream, rbuffstream.data(), param.enc_params_stream_sz, enc_params);
     STDSC_LOG_INFO("Uploaded encryption params.");
 
-    auto context = seal::SEALContext::Create(enc_params);
+    seal::SEALContext context(enc_params);
 
     seal::PublicKey pubkey;
     ppcnn_share::seal_utility::read_from_binary_stream(

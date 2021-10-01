@@ -175,7 +175,7 @@ struct CalcThread::Impl
     {
         LOGINFO("Start computation.\n");
         bool res = true;
-        auto context = seal::SEALContext::Create(*(enc_keys.params));
+        seal::SEALContext context(*(enc_keys.params));
 
         auto& pubkey = *(enc_keys.pubkey);
         auto& relin_keys = *(enc_keys.relinkey);

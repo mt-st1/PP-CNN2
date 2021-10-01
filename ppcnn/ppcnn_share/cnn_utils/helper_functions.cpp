@@ -48,21 +48,21 @@ inline void loadPublicKey(PublicKey& public_key,
                           shared_ptr<SEALContext>& context)
 {
     ifstream pk_ifs(PK_FILE_PATH);
-    public_key.load(context, pk_ifs);
+    public_key.load(*context, pk_ifs);
     pk_ifs.close();
 }
 inline void loadSecretKey(SecretKey& secret_key,
                           shared_ptr<SEALContext>& context)
 {
     ifstream sk_ifs(SK_FILE_PATH);
-    secret_key.load(context, sk_ifs);
+    secret_key.load(*context, sk_ifs);
     sk_ifs.close();
 }
 inline void loadRelinKeys(RelinKeys& relin_keys,
                           shared_ptr<SEALContext>& context)
 {
     ifstream rk_ifs(RK_FILE_PATH);
-    relin_keys.load(context, rk_ifs);
+    relin_keys.load(*context, rk_ifs);
     rk_ifs.close();
 }
 

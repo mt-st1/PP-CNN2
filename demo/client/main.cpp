@@ -242,7 +242,7 @@ void compute(const int32_t key_id,
 {
     STDSC_LOG_INFO("Encrypt imgs");
 
-    auto context = seal::SEALContext::Create(enc_params);
+    seal::SEALContext context(enc_params);
     std::shared_ptr<seal::CKKSEncoder> encoder(new seal::CKKSEncoder(context));
     const size_t slot_count = encoder->slot_count();
 
@@ -328,7 +328,7 @@ void exec(Option& option)
     seal::SecretKey seckey;
     seal::PublicKey pubkey;
     seal::RelinKeys relinkey;
-    seal::EncryptionParameters enc_params(seal::scheme_type::CKKS);
+    seal::EncryptionParameters enc_params(seal::scheme_type::ckks);
     auto key_id =
       init_keys(option.config_filepath, seckey, pubkey, relinkey, enc_params);
     STDSC_LOG_INFO("Generated encryption keys. (key_id:%d)", key_id);
@@ -356,7 +356,7 @@ void exec(Option& option)
     comp_params.opt_level = option.opt_level;
     comp_params.activation = option.activation;
 
-    auto context = seal::SEALContext::Create(enc_params);
+    seal::SEALContext context(enc_params);
     std::shared_ptr<seal::Decryptor> decryptor(
       new seal::Decryptor(context, seckey));
     std::shared_ptr<seal::CKKSEncoder> encoder(new seal::CKKSEncoder(context));

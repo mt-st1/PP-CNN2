@@ -73,7 +73,7 @@ EncData::EncData(const seal::EncryptionParameters& params,
 void EncData::encrypt(const int64_t input_value, const seal::PublicKey& pubkey,
                       const seal::GaloisKeys& galoiskey)
 {
-    auto context = seal::SEALContext::Create(pimpl_->params_);
+    seal::SEALContext context(pimpl_->params_);
 
     seal::Encryptor encryptor(context, pubkey);
     seal::Evaluator evaluator(context);
@@ -146,7 +146,7 @@ void EncData::encrypt(const std::vector<int64_t>& input_values,
                       const seal::PublicKey& pubkey,
                       const seal::GaloisKeys& galoiskey)
 {
-    auto context = seal::SEALContext::Create(pimpl_->params_);
+    seal::SEALContext context(pimpl_->params_);
 
     seal::Encryptor encryptor(context, pubkey);
     seal::Evaluator evaluator(context);
@@ -224,7 +224,7 @@ void EncData::decrypt(const seal::SecretKey& secret_key,
                       std::vector<int64_t>& output_values) const
 {
     auto& ctxt = vec_[0];
-    auto context = seal::SEALContext::Create(pimpl_->params_);
+    seal::SEALContext context(pimpl_->params_);
 
     seal::Decryptor decryptor(context, secret_key);
     seal::BatchEncoder batch_encoder(context);
@@ -268,7 +268,7 @@ size_t EncData::load(std::istream& is)
 
     clear();
 
-    auto context = seal::SEALContext::Create(pimpl_->params_);
+    seal::SEALContext context(pimpl_->params_);
 
     size_t loaded_bytes = sizeof(sz);
     for (size_t i = 0; i < sz; ++i)
