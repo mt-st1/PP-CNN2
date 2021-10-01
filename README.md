@@ -10,7 +10,7 @@ Privacy Preserving CNN Inference over Homomorphic Encryption
   - Require zlib & szip
 
 [Build and run using Docker]
-- Docker (19.03.13) 
+- Docker (19.03.13)
 
 [Model training] (Python)
 - Keras(2.0.8)
@@ -100,8 +100,8 @@ The demo app consists of two processes: Client and Server. These processes commu
 * Configuration
     * Specify the following encryption parameters in the configuration file.
         ```
-	power = 15   (Default: 15)
-	level = 5    (Default: 5)
+        power = 15   (Default: 15)
+        level = 5    (Default: 5)
         ```
         * power: power of polynomial modulus degree (ex. 13, 14, 15)
         * level: required multiplicative level
