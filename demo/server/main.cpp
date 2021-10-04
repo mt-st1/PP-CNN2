@@ -93,8 +93,6 @@ void exec(Option& option)
         callback.set(ppcnn_share::kControlCodeUpDownloadResult, cb_result);
     }
 
-    const char* host = "localhost";
-
     std::shared_ptr<ppcnn_server::Server> server(new ppcnn_server::Server(
       option.port.c_str(), callback, state, option.max_queries,
       option.max_results, option.max_result_lifetime_sec));

@@ -176,6 +176,10 @@ void init(Option& option, int argc, char* argv[])
                 break;
             case 'C':
                 option.config_filepath = optarg;
+                if (!ppcnn_share::utility::file_exist(option.config_filepath)) {
+                    std::cerr << "Config file cannot to be found." << std::endl;
+                    exit(1);
+                }
                 break;
             case 'h':
             default:
@@ -186,32 +190,24 @@ void init(Option& option, int argc, char* argv[])
                 exit(1);
         }
     }
+    if (option.config_filepath == "") {
+        std::cerr << "'C' option is not specified. Please specify config_filepath." << std::endl;
+        exit(1);
+    }
 }
 
 int32_t init_keys(const std::string& config_filepath, seal::SecretKey& seckey,
                   seal::PublicKey& pubkey, seal::RelinKeys& relinkey,
                   seal::EncryptionParameters& params)
 {
-    size_t power = 0, level = 0;
-
-    if (ppcnn_share::utility::file_exist(config_filepath))
-    {
-        ppcnn_share::Config conf;
-        conf.load_from_file(config_filepath);
-
-#define READ(key, val, type, vfmt)                                       \
-    do                                                                   \
-    {                                                                    \
-        if (conf.is_exist_key(#key))                                     \
-            val = ppcnn_share::config_get_value<type>(conf, #key);       \
-        STDSC_LOG_INFO("read fhe parameter. (%s: " vfmt ")", #key, val); \
-    } while (0)
-
-        READ(power, power, size_t, "%lu");
-        READ(level, level, size_t, "%lu");
-
-#undef READ
+    ppcnn_share::Config conf;
+    conf.load_from_file(config_filepath);
+    if (!conf.is_exist_key("power") && !conf.is_exist_key("level")) {
+        std::cerr << "Please specify 'power' & 'level' in " << config_filepath << std::endl;
+        exit(1);
     }
+    const size_t power = ppcnn_share::config_get_value<size_t>(conf, "power");
+    const size_t level = ppcnn_share::config_get_value<size_t>(conf, "level");
 
     ppcnn_client::KeyContainer keycont;
     auto key_id = keycont.new_keys(power, level);

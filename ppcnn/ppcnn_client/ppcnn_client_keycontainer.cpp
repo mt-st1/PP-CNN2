@@ -211,7 +211,7 @@ private:
         print_parameters(context);
 
         seal::KeyGenerator keygen(*context);
-        seal::SecretKey secret_key = keygen.secret_key();
+        auto secret_key = keygen.secret_key();
         seal::PublicKey public_key;
         keygen.create_public_key(public_key);
         seal::RelinKeys relin_keys;
