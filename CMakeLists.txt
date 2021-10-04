@@ -13,7 +13,7 @@ find_package(HDF5 REQUIRED)
 include_directories(
   ${PROJECT_SOURCE_DIR}/ppcnn
   ${PROJECT_SOURCE_DIR}/stdsc
-  /home/takumi/mylibs/include/SEAL-3.6
+  ${SEAL_INCLUDE_DIR}
   PRIVATE ${HDF5_INCLUDE_DIRS})
 
 set(COMMON_LIBS
